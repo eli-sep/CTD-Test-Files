@@ -1,5 +1,5 @@
-// let quadequation1 = "3x^2 + 7x + 2 = 0";
-let quadequation1 = "8x^2 + 40x + 37 = 0";
+let quadequation1 = "-53x^2 + 6x + 6 = 0";
+// let quadequation1 = "8x^2 + 40x + 37 = 0";
 
 //Checks if a valid equation was used
 function validateQuadEq(quadEq) {
@@ -18,7 +18,8 @@ function validateQuadEq(quadEq) {
   }
 }
 
-function fracReduce(num, denom) {
+function fracReduce(num, denom, root = "", imgn = "") {
+  let answer;
   console.log("Reduce funct", num / denom);
   if (!Number.isInteger(num / denom)) {
     let lesser = Math.abs(num);
@@ -31,15 +32,24 @@ function fracReduce(num, denom) {
       let greater = denom;
     }
     for (let i = Math.abs(lesser); i > 0; i--) {
-      console.log(" lesser % i", lesser % i);
-      console.log("greater % i", greater % i);
+      //   console.log(" lesser % i", lesser % i);
+      //   console.log("greater % i", greater % i);
       if (!(lesser % i || greater % i)) {
         console.log("i", i);
         num = num / i;
         denom = denom / i;
-        return;
+        {
+          if (root) {
+            num = "";
+          }
+        }
+        answer = num + imgn + root + "/" + denom;
+        return answer;
       }
     }
+  } else {
+    answer = num / denom;
+    return answer;
   }
 }
 
@@ -55,8 +65,7 @@ function quadraticFormulaCalc(quadEq) {
   let c = "";
   let answer1;
   let answer2;
-  // console.log(quadEq)
-  // console.log("index of", quadEq.indexOf("x^"))
+
   if (quadEq.indexOf("x^2") === 0) {
     a = 1;
   } else {
@@ -90,38 +99,62 @@ function quadraticFormulaCalc(quadEq) {
   let minusB = -b;
   let square = b * b - 4 * a * c;
   let twoA = 2 * a;
-  let squareRt;
-  let imaginary = "";
+  let squareRtPos;
+  let squareRtNeg;
   let partRt;
+  let imaginary = "";
+  let firstPart;
+  let secondPartPos;
+  let secondPartNeg;
 
   if (square < 0) {
     square *= -1;
     imaginary = "i";
+  } else {
+    imaginary = 0;
   }
 
+  //Get the square root if and integer otherwise returns simplified radical
   if (Number.isInteger(Math.sqrt(square))) {
-    squareRt = Math.sqrt(square);
-    console.log("squareRt", squareRt);
+      squareRtPos = Math.sqrt(square);
+      squareRtNeg = Math.sqrt(square) * -1;
+      if (!imaginary) {
+      secondPartPos = squareRtPos;
+      secondPartNeg = squareRtNeg;
+
+      console.log("squarePartPos", secondPartPos);
+      console.log("squarePartPos", typeof secondPartPos);
+      console.log("squarePartNeg", secondPartNeg);
+      console.log("squarePartNeg", typeof secondPartNeg);
+    } else {
+
+    }
   } else {
     console.log("sqrt", Math.sqrt(square));
     for (let i = Math.floor(Math.sqrt(square)); i > 0; i--) {
       if (square % (i * i) === 0) {
-        partRt = i;
-        squareRt = "√" + square / (i * i);
+        squareRtPos = "√" + square / (i * i);
+        squareRtNeg = "√" + square / (i * i);
+        secondPartPos = " + " + fracReduce(i, twoA, squareRtPos, imaginary);
+        secondPartNeg = " - " + fracReduce(i, twoA, squareRtNeg, imaginary);
         break;
       }
     }
     console.log("this starts", square);
   }
-  fracReduce(minusB, twoA);
+  let numeratorPos = minusB + secondPartPos;
+  let numeratorNeg = minusB - secondPartPos;
+  answer1 = fracReduce(numeratorPos, twoA);
+  answer2 = fracReduce(numeratorNeg, twoA);
 
   console.log("minB", minusB);
   console.log("square", square);
   console.log("2a", twoA);
 
-  answer1 = `${minusB + squareRt} / ${twoA}`;
+  //   answer1 = `${firstPart + secondPartPos}`;
+  //   answer2 = `${firstPart + secondPartNeg}`;
 
-  console.log(answer1);
+  console.log(answer1 + ", " + answer2);
 
   // TESTING TRUE / FALSE RESOLUTION
   //   let asdf = "";
