@@ -41,3 +41,14 @@ console.log("Q8 original array: ", full);
 console.log(full.slice(0, 1));
 console.log(full.slice(1));
 console.log(full);
+
+function test() {
+    console.log(a);
+    console.log(foo());
+
+    var a = 1;
+    function foo() {
+       return 2;
+    }
+}
+test();
